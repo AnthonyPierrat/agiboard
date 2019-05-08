@@ -1,5 +1,6 @@
 import { JsonController, Param, Body, Get, Post, Put, Delete, UseBefore } from "routing-controllers";
 import { TokenMiddleware } from "../middlewares/token.middleware";
+import { RoleMiddleware } from "../middlewares/role.middleware";
 
 @UseBefore(TokenMiddleware)
 @JsonController()
@@ -15,6 +16,7 @@ export class UserController {
         return "This action returns user #" + id;
     }
 
+    @UseBefore(RoleMiddleware)
     @Post("/users")
     post(@Body() user: any) {
         console.log(user);
@@ -26,6 +28,7 @@ export class UserController {
         return "Updating a user...";
     }
 
+    @UseBefore(RoleMiddleware)
     @Delete("/users/:id")
     remove(@Param("id") id: number) {
         return "Removing user...";

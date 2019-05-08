@@ -16,6 +16,8 @@ export class UserRegisterDto {
 
     lastUpdate: Date;
 
+    admin: boolean = false;
+
     deleted: boolean = false;
 }
 
@@ -33,6 +35,8 @@ export class UserLogInDto {
     creationDate: Date;
 
     lastUpdate: Date;
+
+    admin: boolean = false;
 
     deleted: boolean = false;
 }

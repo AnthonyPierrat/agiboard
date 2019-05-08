@@ -61,7 +61,7 @@ export class AuthService {
         const secret = process.env.JWT_SECRET;
         return {
             expiresIn,
-            token: await jwt.sign({ _id: user.id }, secret, { expiresIn }),
+            token: await jwt.sign({ _id: user.id, _email: user.email, _admin: user.admin }, secret, { expiresIn }),
         };
     }
 
