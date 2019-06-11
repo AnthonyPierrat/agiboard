@@ -33,7 +33,6 @@ export class AuthController extends ApiController {
 
         const signedUser = await this.authService.signup(user);
         return this.response(true, signedUser, 'successfully signed in', 201);
-
     }
 
     /**

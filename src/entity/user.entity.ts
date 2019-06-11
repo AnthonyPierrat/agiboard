@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany, UpdateDateColumn } from "typeorm";
+import { Workspace } from "./workspace.entity";
 
 @Entity()
 @Unique(["email"])
@@ -21,7 +22,7 @@ export class User {
     @Column()
     creationDate: Date
 
-    @Column()
+    @UpdateDateColumn()
     lastUpdate: Date
 
     @Column({
@@ -34,4 +35,6 @@ export class User {
     })
     deleted: boolean;
 
+    @OneToMany(type => Workspace, workspace => workspace.owner)
+    workspaces: Workspace[];
 }
