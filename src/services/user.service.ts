@@ -63,7 +63,6 @@ export class UserService {
      * @returns {Promise<User>}
      */
     async save(user: User): Promise<User> {
-        user.lastUpdate = new Date();
         return await this.userRepository.save(user);
     }
 
