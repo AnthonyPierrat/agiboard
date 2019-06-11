@@ -32,11 +32,9 @@ export class WorkspaceUpdateDto {
 
     owner: User;
 
-    //Lock field
     creationDate: Date;
 
     lastUpdate: Date;
 
-    //Lock field
     deleted: boolean = false;
 }

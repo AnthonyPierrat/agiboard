@@ -1,6 +1,5 @@
 import { JsonController, Param, Body, Get, Post, Put, Delete, UseBefore, HttpCode, BadRequestError } from "routing-controllers";
 import { TokenMiddleware } from "../middlewares/token.middleware";
-import { RoleMiddleware } from "../middlewares/role.middleware";
 import { WorkspaceCreationDto, WorkspaceUpdateDto } from '../dtos/workspace.dto';
 import { validate } from "class-validator";
 import { ApiController } from "./api.controller";
