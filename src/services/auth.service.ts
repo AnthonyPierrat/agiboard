@@ -4,7 +4,10 @@ import Container, { Service } from 'typedi';
 import { UserRegisterDto, UserLogInDto } from '../dtos/user.dto';
 import { User } from '../entity/user.entity';
 import { UserService } from './user.service';
-import { NotFoundError, BadRequestError, HttpError, InternalServerError } from 'routing-controllers';
+import { InternalServerError } from 'routing-controllers';
+import { EmailExistException } from '../exception/email-exist.exception';
+import { EmailNotExistException } from '../exception/email-not-exist.exception';
+import { PasswordException } from '../exception/password.exception';
 
 @Service()
 export class AuthService {
@@ -26,7 +29,7 @@ export class AuthService {
     public async signup(user: UserRegisterDto): Promise<any> {
         const checkUserEmail: User = await this.userService.findOneByEmail(user.email);
         if (checkUserEmail) {
-            throw new HttpError(409, 'Email already exist');
+            throw new EmailExistException(false);
         }
         try {
             return await this.userService.create(user);
@@ -42,11 +45,11 @@ export class AuthService {
     public async signin(user: UserLogInDto): Promise<any> {
         const checkUser: User = await this.userService.findOneByEmail(user.email);
         if (!checkUser) {
-            return new NotFoundError('email does not exist');
+            throw new EmailNotExistException(false);
         }
         const matching = await compare(user.password, checkUser.password);
         if (!matching) {
-            throw new BadRequestError('password is wrong');
+            throw new PasswordException(false);
         }
         return await this.createToken(checkUser);
 
