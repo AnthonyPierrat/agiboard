@@ -7,7 +7,6 @@ import { EventCreationDto } from '../dtos/event.dto';
 import { User } from "../entity/user.entity";
 import {getConnection} from "typeorm";
 
-
 @Service()
 export class EventService {
 
@@ -41,7 +40,6 @@ export class EventService {
         event.creationDate = new Date();
         event.lastUpdate = new Date();
         return await this.eventRepository.save(event);
-
     }
 
     /**

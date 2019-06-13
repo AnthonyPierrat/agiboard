@@ -45,5 +45,4 @@ export class User {
     
     @ManyToMany(type => Event, event => event.members)
     events: Event[];
-    
 }
