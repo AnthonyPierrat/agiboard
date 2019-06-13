@@ -43,9 +43,9 @@ export class WorkspaceService {
      * @returns {Promise<Workspace>}
      */
     async findOne(id: number): Promise<Workspace> {
-        const result = await this.workspaceRepository.findOne(id);
+        const result = await this.workspaceRepository.findOne(id, {relations: ["owner"]});
         if (result) {
-            return await this.workspaceRepository.findOne(id);
+            return result;
         }
         else {
             throw new NotFoundError;
@@ -70,4 +70,11 @@ export class WorkspaceService {
         workspace.deleted = true;
         return await this.workspaceRepository.save(workspace);
     }
+
+    /*
+    *
+    */
+   async findWorkspacesByUser(idUser: number): Promise<Workspace[]>{
+        return await this.workspaceRepository.find({relations: ["owner"], where: { owner: { id: idUser }} });
+   }
 }

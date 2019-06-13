@@ -1,5 +1,6 @@
 import { ExpressMiddlewareInterface } from "routing-controllers";
 import * as jwt from "jsonwebtoken";
+import { RoleException } from "../exception/role.exception";
 
 export class RoleMiddleware implements ExpressMiddlewareInterface {
 
@@ -9,7 +10,7 @@ export class RoleMiddleware implements ExpressMiddlewareInterface {
         if (decodedUser._admin) {
             next();
         } else {
-            res.send(401);
+            throw new RoleException(false);
         }
     }
 

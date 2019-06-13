@@ -1,9 +1,10 @@
-import { JsonController, Body, Post, HttpCode, BadRequestError } from "routing-controllers";
+import { JsonController, Body, Post, HttpCode } from "routing-controllers";
 import Container from "typedi";
 import { UserRegisterDto, UserLogInDto } from "../dtos/user.dto";
 import { validate } from "class-validator";
 import { AuthService } from "../services/auth.service";
 import { ApiController } from "./api.controller";
+import { BadRequestException } from "../exception/bad-request.exception";
 
 @JsonController("/auth")
 export class AuthController extends ApiController {
@@ -28,7 +29,7 @@ export class AuthController extends ApiController {
     private async signup(@Body() user: UserRegisterDto): Promise<any> {
         const errors = await validate(user);
         if (errors.length > 0) {
-            throw new BadRequestError(errors.toString());
+            throw new BadRequestException(false, errors.toString());
         }
 
         const signedUser = await this.authService.signup(user);
@@ -44,7 +45,7 @@ export class AuthController extends ApiController {
     private async signin(@Body() user: UserLogInDto): Promise<any> {
         const errors = await validate(user);
         if (errors.length > 0) {
-            throw new BadRequestError(errors.toString());
+            throw new BadRequestException(false, errors.toString());
         }
 
         const loggedUser = await this.authService.signin(user);
