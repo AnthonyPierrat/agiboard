@@ -34,7 +34,7 @@ export class AuthService {
         try {
             return await this.userService.create(user);
         } catch (err) {
-            return new InternalServerError(err);
+            throw new InternalServerError(err);
         }
     }
 
@@ -47,6 +47,7 @@ export class AuthService {
         if (!checkUser) {
             throw new EmailNotExistException(false);
         }
+      
         const matching = await compare(user.password, checkUser.password);
         if (!matching) {
             throw new PasswordException(false);
