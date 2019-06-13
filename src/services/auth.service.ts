@@ -31,7 +31,7 @@ export class AuthService {
         try {
             return await this.userService.create(user);
         } catch (err) {
-            return new InternalServerError(err);
+            throw new InternalServerError(err);
         }
     }
 
@@ -42,7 +42,7 @@ export class AuthService {
     public async signin(user: UserLogInDto): Promise<any> {
         const checkUser: User = await this.userService.findOneByEmail(user.email);
         if (!checkUser) {
-            return new NotFoundError('email does not exist');
+            throw new NotFoundError('email does not exist');
         }
         const matching = await compare(user.password, checkUser.password);
         if (!matching) {
