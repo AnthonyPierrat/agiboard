@@ -63,15 +63,17 @@ export class UserService {
      * @returns {Promise<User>}
      */
     async save(user: User): Promise<User> {
+        user.lastUpdate = new Date();
         return await this.userRepository.save(user);
     }
 
     /**
      * Delete a user
-     * @param {User} user user to update to delete
+     * @param {number} id id of user to update to delete
      * @returns {Promise<User>}
      */
-    async delete(user: User): Promise<User> {
+    async delete(id: number): Promise<User> {
+        let user = await this.userRepository.findOne(id);
         user.deleted = true;
         return await this.userRepository.save(user);
     }
