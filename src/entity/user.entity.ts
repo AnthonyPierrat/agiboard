@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany, UpdateDateColumn } from "typeorm";
 import { Workspace } from "./workspace.entity";
+import { UserProject } from "./userProject.entity";
 
 @Entity()
 @Unique(["email"])
@@ -37,4 +38,7 @@ export class User {
 
     @OneToMany(type => Workspace, workspace => workspace.owner)
     workspaces: Workspace[];
+
+    @OneToMany(type => UserProject, userProject => userProject.user)
+    userProjects: UserProject[];
 }
