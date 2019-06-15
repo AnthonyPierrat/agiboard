@@ -40,9 +40,8 @@ export class User {
     @OneToMany(type => Workspace, workspace => workspace.owner)
     workspaces: Workspace[];
 
-    @OneToMany(type => UserProject, userProject => userProject.user)
-    userProjects: UserProject[];
     
-    @ManyToMany(type => Event, event => event.members)
+    @ManyToMany(type => Event)
     events: Event[];
+    
 }
