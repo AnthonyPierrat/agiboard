@@ -1,9 +1,12 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Repository } from 'typeorm';
+import { Repository, getRepository, In } from 'typeorm';
 import { NotFoundError } from "routing-controllers";
 import { Event } from '../entity/event.entity';
 import { EventCreationDto } from '../dtos/event.dto';
+import { User } from "../entity/user.entity";
+import {getConnection} from "typeorm";
+
 
 @Service()
 export class EventService {
@@ -15,6 +18,9 @@ export class EventService {
     constructor(
         @InjectRepository(Event)
         private readonly eventRepository: Repository<Event>,
+
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>
     ) { }
 
     /**
@@ -23,10 +29,19 @@ export class EventService {
      * @returns {Promise<Event>}
      */
     async create(event: EventCreationDto): Promise<Event> {
-        let { description, type, members, sprint, startDate, endDate, creationDate, lastUpdate } = event;
-        creationDate = new Date();
-        lastUpdate = new Date();
-        return await this.eventRepository.save({ description, type, members, sprint, startDate, endDate, creationDate, lastUpdate });
+        
+        let { members } = event;
+        const users =  await this.userRepository.find({id: In(members)});
+
+        event.members = [];
+        for(const member of users){
+            event.members.push(member);
+        }
+
+        event.creationDate = new Date();
+        event.lastUpdate = new Date();
+        return await this.eventRepository.save(event);
+
     }
 
     /**
