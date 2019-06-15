@@ -47,7 +47,7 @@ export class AuthService {
         if (!checkUser) {
             throw new EmailNotExistException(false);
         }
-      
+
         const matching = await compare(user.password, checkUser.password);
         if (!matching) {
             throw new PasswordException(false);
@@ -65,7 +65,7 @@ export class AuthService {
         const secret = process.env.JWT_SECRET;
         return {
             expiresIn,
-            token: await jwt.sign({ _id: user.id, _email: user.email, _admin: user.admin }, secret, { expiresIn }),
+            token: await jwt.sign({ id: user.id, email: user.email, admin: user.admin, username: user.name }, secret, { expiresIn }),
         };
     }
 
