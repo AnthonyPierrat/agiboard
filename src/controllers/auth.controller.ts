@@ -50,6 +50,7 @@ export class AuthController extends ApiController {
 
         const loggedUser = await this.authService.signin(user);
         return this.response(true, loggedUser, 'successfully logged in', 200);
+
     }
 
 }
