@@ -1,9 +1,11 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Repository } from 'typeorm';
+import { Repository, getRepository, In } from 'typeorm';
 import { NotFoundError } from "routing-controllers";
 import { Project } from '../entity/project.entity';
 import { ProjectCreationDto } from '../dtos/project.dto';
+import { User } from '../entity/user.entity';
+import { UserProject } from '../entity/userProject.entity';
 
 @Service()
 export class ProjectService {
@@ -14,7 +16,9 @@ export class ProjectService {
      */
     constructor(
         @InjectRepository(Project)
-        private readonly projectRepository: Repository<Project>
+        private readonly projectRepository: Repository<Project>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>
     ) { }
 
     /**
@@ -26,6 +30,19 @@ export class ProjectService {
         let { name, description, workspace, userProjects, budget, creationDate, startDate, endDate, lastUpdate } = project;
         creationDate = new Date();
         lastUpdate = new Date();
+
+        const projectSaved = await this.projectRepository.save({ name, description, workspace, userProjects, budget, creationDate, startDate, endDate, lastUpdate });
+       
+        const users = await this.userRepository.find({id: In(userProjects)});
+
+        users.forEach(user => {
+            const userProject = new UserProject();
+            userProject.isActive = true;
+            userProject.project = projectSaved;
+            userProject.user = user;
+            project.userProjects.push(userProject);
+        });        
+
         return await this.projectRepository.save({ name, description, workspace, userProjects, budget, creationDate, startDate, endDate, lastUpdate });
     }
 
