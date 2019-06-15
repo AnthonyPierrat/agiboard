@@ -15,20 +15,8 @@ export class Event {
     @Column()
     type: EventType;
 
-    @ManyToMany(type => User, user => user.events, {
-        cascade: true
-    })
-    @JoinTable({
-        name: 'EventMembers',
-        joinColumn: {
-            name: "eventId",
-            referencedColumnName: "id"
-        },
-        inverseJoinColumn: {
-            name: "memberId",
-            referencedColumnName: "id"
-        }
-    })
+    @ManyToMany(type => User)
+    @JoinTable()
     members: User[];
 
     @ManyToOne(type => Sprint, sprint => sprint.events)
