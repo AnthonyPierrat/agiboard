@@ -1,4 +1,4 @@
-import { JsonController, Param, Body, Get, Post, Put, Delete, UseBefore } from "routing-controllers";
+import { JsonController, Param, Body, Get, Post, Put, Delete, UseBefore,BadRequestError } from "routing-controllers";
 import { TokenMiddleware } from "../middlewares/token.middleware";
 import { RoleMiddleware } from "../middlewares/role.middleware";
 import { TaskService } from "../services/task.service";
@@ -6,6 +6,10 @@ import { ApiController } from "./api.controller";
 import Container from "typedi";
 import { isDate } from "util";
 import { UserService } from "../services/user.service";
+import { TaskCreationDto } from '../dtos/task.dto';
+import { validate } from "class-validator";
+
+
 
 
 @UseBefore(TokenMiddleware)
@@ -21,6 +25,17 @@ export class TaskController extends ApiController {
         this.userService = Container.get(UserService);
     }
 
+
+    @Post("/tasks")
+    private async post(@Body() task: TaskCreationDto): Promise<any> {
+        const errors = await validate(task);
+        if (errors.length > 0) {
+            throw new BadRequestError(errors.toString());
+        }
+
+        const createdTask = await this.taskService.create(task);
+        return this.response(true, createdTask, 'task successfully created', 201);
+    }
 
     @Get("/tasks")
     async getAll() {

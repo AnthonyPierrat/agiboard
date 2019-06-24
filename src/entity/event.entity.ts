@@ -20,6 +20,7 @@ export class Event {
     members: User[];
 
     @ManyToOne(type => Sprint, sprint => sprint.events)
+    @JoinTable()
     sprint: Sprint;
 
     @Column()

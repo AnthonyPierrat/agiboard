@@ -21,7 +21,7 @@ export class TaskCreationDto {
     id: number;
     status: Status;
     members: User[];
-    sprint: Sprint[];
+    sprint: Sprint;
     creationDate: Date
     lastUpdate: Date
     deleted: boolean = false;

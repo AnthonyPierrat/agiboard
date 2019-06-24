@@ -5,7 +5,7 @@ import { NotFoundError } from "routing-controllers";
 import { Sprint } from '../entity/sprint.entity';
 import { Event } from '../entity/event.entity';
 
-import { SprintCreationDto } from '../dtos/sprint.dto';
+import { SprintCreationDto, SprintUpdateDto } from '../dtos/sprint.dto';
 
 @Service()
 export class SprintService {
@@ -28,16 +28,6 @@ export class SprintService {
      * @returns {Promise<Sprint>}
      */
     async create(sprint: SprintCreationDto): Promise<Sprint> {
-        console.log("OUI");
-        let { events } = sprint;
-        
-        const eventsOfSprint =  await this.eventRepository.find({id: In(events)});
-        console.log(eventsOfSprint);
-        sprint.events = [];
-        for(const event of eventsOfSprint){
-            sprint.events.push(event);
-        }
-
         sprint.creationDate = new Date();
         sprint.lastUpdate = new Date();
 
@@ -49,7 +39,7 @@ export class SprintService {
      * @returns {Promise<Sprint[]>}
      */
     async findAll(): Promise<Sprint[]> {
-        return await this.sprintRepository.find({relations: ["events"]});
+        return await this.sprintRepository.find({relations: ["events", "tasks"]});
     }
 
     /**
@@ -58,7 +48,7 @@ export class SprintService {
      * @returns {Promise<Sprint>}
      */
     async findOne(id: number): Promise<Sprint> {
-        const result = await this.sprintRepository.findOne(id, {relations: ["events"]});
+        const result = await this.sprintRepository.findOne(id, {relations: ["events", "tasks"]});
         if (result) {
             return result;
         }
@@ -72,7 +62,7 @@ export class SprintService {
      * @param {Sprint} sprint sprint to update
      * @returns {Promise<Sprint>}
      */
-    async save(sprint: Sprint): Promise<Sprint> {
+    async save(sprint: SprintUpdateDto): Promise<Sprint> {
         return await this.sprintRepository.save(sprint);
     }
 

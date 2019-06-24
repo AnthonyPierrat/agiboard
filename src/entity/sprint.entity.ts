@@ -1,5 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, OneToMany, ManyToOne, JoinTable } from "typeorm";
 import { Event } from "./event.entity";
+import { Task } from "./task.entity";
+
 
 @Entity()
 
@@ -12,8 +14,11 @@ export class Sprint {
     name: string;
 
     @OneToMany(type => Event, event => event.sprint)
-    @JoinTable()
     events: Event[];
+
+    @OneToMany(type => Task, task => task.sprint)
+    tasks: Task[];
+
 
     @Column()
     startDate: Date
