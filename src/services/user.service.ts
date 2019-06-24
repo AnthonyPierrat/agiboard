@@ -1,7 +1,7 @@
 import { hash } from 'bcrypt';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { User } from "../entity/user.entity";
 import { UserRegisterDto } from '../dtos/user.dto';
 
@@ -25,6 +25,10 @@ export class UserService {
     async create(user: UserRegisterDto): Promise<User> {
         let { name, email, password, creationDate, lastUpdate } = user;
         name = email.split('@')[0];
+        const existingUsers = await this.userRepository.find({ name: Like(`%${name}%`) });
+        if (existingUsers.length > 0) {
+            name = email.split('@')[0] + existingUsers.length++;
+        }
         password = await hash(password, 10);
         creationDate = new Date();
         lastUpdate = new Date();

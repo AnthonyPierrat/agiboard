@@ -4,7 +4,6 @@ import { RoleMiddleware } from "../middlewares/role.middleware";
 import { UserService } from "../services/user.service";
 import { ApiController } from "./api.controller";
 import Container from "typedi";
-import { isDate } from "util";
 import { WorkspaceService } from "../services/workspace.service";
 
 
@@ -15,7 +14,7 @@ export class UserController extends ApiController {
     private userService: UserService;
     private workspaceService: WorkspaceService;
 
-    constructor(){
+    constructor() {
         super();
         this.userService = Container.get(UserService);
         this.workspaceService = Container.get(WorkspaceService);
@@ -34,11 +33,10 @@ export class UserController extends ApiController {
         return this.response(true, user, 'The user has been successfully returned', 200);
     }
 
-    @UseBefore(RoleMiddleware)
     @Get("/users/:id/workspaces")
-    async getUserWorkspaces(@Param("id") id: number){
+    async getUserWorkspaces(@Param("id") id: number) {
         const workspaces = await this.workspaceService.findWorkspacesByUser(id);
-        return this.response(true, workspaces, 'Workspaces owned by user with id : '+id+', successfully returned', 200);
+        return this.response(true, workspaces, 'Workspaces owned by user with id : ' + id + ', successfully returned', 200);
     }
 
     @Put("/users/:id")
@@ -51,7 +49,7 @@ export class UserController extends ApiController {
     @Delete("/users/:id")
     async remove(@Param("id") id: number) {
         const userDeleted = await this.userService.delete(id);
-        return this.response(true, id, 'User with id : '+id+' successfully deleted', 200);
+        return this.response(true, id, 'User with id : ' + id + ' successfully deleted', 200);
     }
 
 }

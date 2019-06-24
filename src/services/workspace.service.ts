@@ -34,7 +34,7 @@ export class WorkspaceService {
      * @returns {Promise<Workspace[]>}
      */
     async findAll(): Promise<Workspace[]> {
-        return await this.workspaceRepository.find({relations: ["owner"]}); //relations : to get full owner data
+        return await this.workspaceRepository.find({ relations: ["owner"] }); //relations : to get full owner data
     }
 
     /**
@@ -43,7 +43,7 @@ export class WorkspaceService {
      * @returns {Promise<Workspace>}
      */
     async findOne(id: number): Promise<Workspace> {
-        const result = await this.workspaceRepository.findOne(id, {relations: ["owner"]});
+        const result = await this.workspaceRepository.findOne(id, { relations: ["owner"] });
         if (result) {
             return result;
         }
@@ -71,10 +71,11 @@ export class WorkspaceService {
         return await this.workspaceRepository.save(workspace);
     }
 
-    /*
-    *
-    */
-   async findWorkspacesByUser(idUser: number): Promise<Workspace[]>{
-        return await this.workspaceRepository.find({relations: ["owner"], where: { owner: { id: idUser }} });
-   }
+    /**
+     * Find workspaces of a given user
+     * @param {number} idUser user id
+     */
+    async findWorkspacesByUser(idUser: number): Promise<Workspace[]> {
+        return await this.workspaceRepository.find({ relations: ["owner"], where: { owner: { id: idUser } } });
+    }
 }
