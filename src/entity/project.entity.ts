@@ -21,9 +21,7 @@ export class Project {
     @ManyToOne(type => Workspace, workspace => workspace.id)
     workspace: Workspace;
 
-    @OneToMany(type => UserProject, userProject => userProject.project, {
-        cascade: true
-    })  
+    @OneToMany(type => UserProject, userProject => userProject.project)
     userProjects: UserProject[];
 
     @Column()

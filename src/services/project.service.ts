@@ -77,19 +77,17 @@ export class ProjectService {
     async addMember(userProject: UserProject): Promise<Project> {
         let { project, user, type } = userProject;
         const projectExist = await this.findOne(project.id);
-        const userExist = await this.userRepository.findOne({ relations: ["userProjects"] });
-        console.log(userExist);
+        const userExist = await this.userRepository.findOne(user.id, { relations: ["userProjects"] });
         if (projectExist && userExist) {
             userProject.project = projectExist;
             userProject.user = userExist;
             const savedUserProject = await this.userProjectRepository.save(userProject);
-            projectExist.userProjects.push(savedUserProject);
-            userExist.userProjects.push(savedUserProject);
-            console.log(projectExist);
+            // projectExist.userProjects.push(savedUserProject);
+            // userExist.userProjects.push(savedUserProject);
             // await this.projectRepository.save(projectExist);
             // await this.userRepository.save(userExist);
 
-            
+
             return project;
         }
         else {
