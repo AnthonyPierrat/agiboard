@@ -5,6 +5,7 @@ import { NotFoundError } from "routing-controllers";
 import { Event } from '../entity/event.entity';
 import { EventCreationDto } from '../dtos/event.dto';
 import { User } from "../entity/user.entity";
+import { Sprint } from "../entity/sprint.entity";
 import {getConnection} from "typeorm";
 
 
@@ -20,7 +21,10 @@ export class EventService {
         private readonly eventRepository: Repository<Event>,
 
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+
+        @InjectRepository(Sprint)
+        private readonly sprintRepository: Repository<Sprint>
     ) { }
 
     /**
@@ -29,7 +33,7 @@ export class EventService {
      * @returns {Promise<Event>}
      */
     async create(event: EventCreationDto): Promise<Event> {
-        
+        //handle relation with members
         let { members } = event;
         const users =  await this.userRepository.find({id: In(members)});
 
@@ -38,8 +42,13 @@ export class EventService {
             event.members.push(member);
         }
 
+        //handle relation with sprint    
+        event.sprint = await this.sprintRepository.findOne(
+            {id: (Number)(event.sprint)});
+
         event.creationDate = new Date();
         event.lastUpdate = new Date();
+        
         return await this.eventRepository.save(event);
 
     }

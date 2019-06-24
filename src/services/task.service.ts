@@ -1,7 +1,9 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Task } from "../entity/task.entity";
+import { Sprint } from "../entity/sprint.entity";
+import { User } from "../entity/user.entity";
 import { TaskCreationDto } from '../dtos/task.dto';
 import { NotFoundError } from "routing-controllers";
 
@@ -11,10 +13,14 @@ export class TaskService {
     /**
      * @constructor
      * @param {Repository<Workspace>} workspaceRepository 
-     */
+     */event
     constructor(
         @InjectRepository(Task)
-        private readonly taskRepository: Repository<Task>
+        private readonly taskRepository: Repository<Task>,
+        @InjectRepository(Sprint)
+        private readonly sprintRepository: Repository<Sprint>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>
     ) { }
 
     /**
@@ -23,10 +29,22 @@ export class TaskService {
      * @returns {Promise<Task>}
      */
     async create(task: TaskCreationDto): Promise<Task> {
-        let { description, status, members, sprint, creationDate, lastUpdate } = task;
-        creationDate = new Date();
-        lastUpdate = new Date();
-        return await this.taskRepository.save({ description, status, members, sprint, creationDate, lastUpdate });
+        //save sprint relation
+        task.sprint =  await this.sprintRepository.findOne({id: (Number)(task.sprint) });
+
+        //save members relation
+        let { members } = task;
+        const users =  await this.userRepository.find({id: In(members)});
+
+        task.members = [];
+        for(const member of users){
+            task.members.push(member);
+        }
+
+        task.creationDate = new Date();
+        task.lastUpdate = new Date();
+
+        return await this.taskRepository.save(task);
     }
 
     /**
@@ -38,7 +56,7 @@ export class TaskService {
     }
 
     /**
-     * Find task by id
+     * Find task by id, sprint => sprint.events
      * @param {number} id 
      * @returns {Promise<Task>}
      */
