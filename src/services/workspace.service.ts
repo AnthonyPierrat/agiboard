@@ -34,7 +34,7 @@ export class WorkspaceService {
      * @returns {Promise<Workspace[]>}
      */
     async findAll(): Promise<Workspace[]> {
-        return await this.workspaceRepository.find({ relations: ["owner"] }); //relations : to get full owner data
+        return await this.workspaceRepository.find({ relations: ["owner", "projects"] }); //relations : to get full owner data
     }
 
     /**
