@@ -74,10 +74,10 @@ export class ProjectService {
      * @param {UserProject} userProject 
      * @returns {Promise<Project>}
      */
-    /*async addMember(userProject: UserProject): Promise<Project> {
+    async addMember(userProject: UserProject): Promise<Project> {
         let { project, user, type } = userProject;
         const projectExist = await this.findOne(project.id);
-        const userExist = await this.userRepository.findOne(user.id, { relations: ["userProjects"] });
+        const userExist = await this.userRepository.findOne({ relations: ["userProjects"] });
         console.log(userExist);
         if (projectExist && userExist) {
             userProject.project = projectExist;
@@ -95,7 +95,7 @@ export class ProjectService {
         else {
             throw new NotFoundError;
         }
-    }*/
+    }
 
     /**
      * Delete a project
