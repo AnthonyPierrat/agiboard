@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, OneToMany, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, OneToMany, ManyToOne, JoinTable } from "typeorm";
 import { Event } from "./event.entity";
 
 @Entity()
@@ -12,6 +12,7 @@ export class Sprint {
     name: string;
 
     @OneToMany(type => Event, event => event.sprint)
+    @JoinTable()
     events: Event[];
 
     @Column()

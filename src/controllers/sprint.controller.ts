@@ -34,7 +34,7 @@ export class SprintController extends ApiController  {
         }
 
         const createdSprint = await this.sprintService.create(sprint);
-        return this.response(true, createdSprint, 'successfully signed in', 201);
+        return this.response(true, createdSprint, 'sprint successfully created', 201);
     }
 
     @Get("/sprints")
