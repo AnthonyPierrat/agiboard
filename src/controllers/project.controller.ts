@@ -57,11 +57,11 @@ export class WorkspaceController extends ApiController  {
         return this.response(true, updatedProject, "project #" + id + ' successfully updated', 200);
     }
 
-    /*@Post("/projects/:id/members")
+    @Post("/projects/:id/members")
     private async addMember(@Param("id") id: number, @Body() UserProject ) {
         const addMember = await this.projectService.addMember(UserProject);
         return this.response(true, UserProject, "is added to project " + id, 200);
-    }*/
+    }
 
     @Delete("/projects/:id")
     private async remove(@Param("id") id: number) {
