@@ -1,8 +1,10 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { NotFoundError } from "routing-controllers";
 import { Sprint } from '../entity/sprint.entity';
+import { Event } from '../entity/event.entity';
+
 import { SprintCreationDto } from '../dtos/sprint.dto';
 
 @Service()
@@ -14,7 +16,10 @@ export class SprintService {
      */
     constructor(
         @InjectRepository(Sprint)
-        private readonly sprintRepository: Repository<Sprint>
+        private readonly sprintRepository: Repository<Sprint>,
+
+        @InjectRepository(Event)
+        private readonly eventRepository: Repository<Event>
     ) { }
 
     /**
@@ -23,10 +28,20 @@ export class SprintService {
      * @returns {Promise<Sprint>}
      */
     async create(sprint: SprintCreationDto): Promise<Sprint> {
-        let { name, /*tasks, project,*/ events, startDate, endDate, creationDate, lastUpdate } = sprint;
-        creationDate = new Date();
-        lastUpdate = new Date();
-        return await this.sprintRepository.save({ name, events, startDate, endDate, creationDate, lastUpdate });
+        console.log("OUI");
+        let { events } = sprint;
+        
+        const eventsOfSprint =  await this.eventRepository.find({id: In(events)});
+        console.log(eventsOfSprint);
+        sprint.events = [];
+        for(const event of eventsOfSprint){
+            sprint.events.push(event);
+        }
+
+        sprint.creationDate = new Date();
+        sprint.lastUpdate = new Date();
+
+        return await this.sprintRepository.save(sprint);
     }
 
     /**
