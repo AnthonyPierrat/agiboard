@@ -31,18 +31,6 @@ export class ProjectService {
         creationDate = new Date();
         lastUpdate = new Date();
 
-        const projectSaved = await this.projectRepository.save({ name, description, workspace, userProjects, budget, creationDate, startDate, endDate, lastUpdate });
-       
-        const users = await this.userRepository.find({id: In(userProjects)});
-
-        await users.forEach(user => {
-            const userProject = new UserProject();
-            userProject.isActive = true;
-            userProject.project = projectSaved;
-            userProject.user = user;
-            project.userProjects.push(userProject);
-        });       
-        
         return await this.projectRepository.save({ name, description, workspace, userProjects, budget, creationDate, startDate, endDate, lastUpdate });
     }
 
@@ -51,7 +39,7 @@ export class ProjectService {
      * @returns {Promise<Project[]>}
      */
     async findAll(): Promise<Project[]> {
-        return await this.projectRepository.find({relations: ["workspace", "userProjects"]}); //relations : to get full workspace data
+        return await this.projectRepository.find({ relations: ["workspace", "userProjects"] }); //relations : to get full workspace data
     }
 
     /**
