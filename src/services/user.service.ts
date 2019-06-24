@@ -45,7 +45,7 @@ export class UserService {
      * @returns {Promise<User>}
      */
     async findOne(id: number): Promise<User> {
-        return await this.userRepository.findOne(id);
+        return await this.userRepository.findOne({ relations: ["userProjects"] });
     }
 
     /**

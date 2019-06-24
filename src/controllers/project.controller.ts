@@ -5,6 +5,7 @@ import { validate } from "class-validator";
 import { ApiController } from "./api.controller";
 import { ProjectService } from "../services/project.service";
 import Container from "typedi";
+import { UserProject } from "../entity/userProject.entity";
 
 @UseBefore(TokenMiddleware)
 @JsonController()
@@ -55,6 +56,12 @@ export class WorkspaceController extends ApiController  {
         const updatedProject = await this.projectService.save(project);
         return this.response(true, updatedProject, "project #" + id + ' successfully updated', 200);
     }
+
+    /*@Post("/projects/:id/members")
+    private async addMember(@Param("id") id: number, @Body() UserProject ) {
+        const addMember = await this.projectService.addMember(UserProject);
+        return this.response(true, UserProject, "is added to project " + id, 200);
+    }*/
 
     @Delete("/projects/:id")
     private async remove(@Param("id") id: number) {

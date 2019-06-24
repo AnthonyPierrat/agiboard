@@ -1,5 +1,6 @@
 import { User } from "../entity/user.entity";
 import { MaxLength } from "class-validator";
+import { Project } from "../entity/project.entity";
 
 export class WorkspaceCreationDto {
 
@@ -12,6 +13,8 @@ export class WorkspaceCreationDto {
     description: string;
 
     owner: User;
+
+    projects: Project[];
 
     creationDate: Date;
 
@@ -31,6 +34,8 @@ export class WorkspaceUpdateDto {
     description: string;
 
     owner: User;
+
+    projects: Project[];
 
     creationDate: Date;
 

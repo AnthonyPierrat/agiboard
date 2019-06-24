@@ -18,7 +18,9 @@ export class ProjectService {
         @InjectRepository(Project)
         private readonly projectRepository: Repository<Project>,
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        @InjectRepository(UserProject)
+        private readonly userProjectRepository: Repository<UserProject>
     ) { }
 
     /**
@@ -30,6 +32,7 @@ export class ProjectService {
         let { name, description, workspace, userProjects, budget, creationDate, startDate, endDate, lastUpdate } = project;
         creationDate = new Date();
         lastUpdate = new Date();
+        userProjects = [];
 
         return await this.projectRepository.save({ name, description, workspace, userProjects, budget, creationDate, startDate, endDate, lastUpdate });
     }
@@ -48,7 +51,7 @@ export class ProjectService {
      * @returns {Promise<Project>}
      */
     async findOne(id: number): Promise<Project> {
-        const result = await this.projectRepository.findOne(id);
+        const result = await this.projectRepository.findOne({ relations: ["workspace", "userProjects"] });
         if (result) {
             return result;
         }
@@ -65,6 +68,34 @@ export class ProjectService {
     async save(project: Project): Promise<Project> {
         return await this.projectRepository.save(project);
     }
+
+    /**
+     * add a member to a project
+     * @param {UserProject} userProject 
+     * @returns {Promise<Project>}
+     */
+    /*async addMember(userProject: UserProject): Promise<Project> {
+        let { project, user, type } = userProject;
+        const projectExist = await this.findOne(project.id);
+        const userExist = await this.userRepository.findOne(user.id, { relations: ["userProjects"] });
+        console.log(userExist);
+        if (projectExist && userExist) {
+            userProject.project = projectExist;
+            userProject.user = userExist;
+            const savedUserProject = await this.userProjectRepository.save(userProject);
+            projectExist.userProjects.push(savedUserProject);
+            userExist.userProjects.push(savedUserProject);
+            console.log(projectExist);
+            // await this.projectRepository.save(projectExist);
+            // await this.userRepository.save(userExist);
+
+            
+            return project;
+        }
+        else {
+            throw new NotFoundError;
+        }
+    }*/
 
     /**
      * Delete a project
