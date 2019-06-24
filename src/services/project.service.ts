@@ -35,14 +35,14 @@ export class ProjectService {
        
         const users = await this.userRepository.find({id: In(userProjects)});
 
-        users.forEach(user => {
+        await users.forEach(user => {
             const userProject = new UserProject();
             userProject.isActive = true;
             userProject.project = projectSaved;
             userProject.user = user;
             project.userProjects.push(userProject);
-        });        
-
+        });       
+        
         return await this.projectRepository.save({ name, description, workspace, userProjects, budget, creationDate, startDate, endDate, lastUpdate });
     }
 
