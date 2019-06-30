@@ -42,7 +42,7 @@ export class ProjectService {
      * @returns {Promise<Project[]>}
      */
     async findAll(): Promise<Project[]> {
-        return await this.projectRepository.find({ relations: ["workspace", "userProjects"] }); //relations : to get full workspace data
+        return await this.projectRepository.find({ relations: ["workspace", "userProjects", "userProjects.user"] }); //relations : to get full workspace data
     }
 
     /**
@@ -51,7 +51,7 @@ export class ProjectService {
      * @returns {Promise<Project>}
      */
     async findOne(id: number): Promise<Project> {
-        const result = await this.projectRepository.findOne({ relations: ["workspace", "userProjects"] });
+        const result = await this.projectRepository.findOne({ relations: ["workspace", "userProjects", "userProjects.user"] });
         if (result) {
             return result;
         }
@@ -74,21 +74,16 @@ export class ProjectService {
      * @param {UserProject} userProject 
      * @returns {Promise<Project>}
      */
-    async addMember(userProject: UserProject): Promise<Project> {
-        let { project, user, type } = userProject;
-        const projectExist = await this.findOne(project.id);
-        const userExist = await this.userRepository.findOne(user.id, { relations: ["userProjects"] });
+    async addMember(userProject: UserProject): Promise<any> {
+        let { project, user } = userProject;
+        const projectExist = await this.projectRepository.findOne(project);
+        const userExist = await this.userRepository.findOne(user);
         if (projectExist && userExist) {
             userProject.project = projectExist;
             userProject.user = userExist;
             const savedUserProject = await this.userProjectRepository.save(userProject);
-            // projectExist.userProjects.push(savedUserProject);
-            // userExist.userProjects.push(savedUserProject);
-            // await this.projectRepository.save(projectExist);
-            // await this.userRepository.save(userExist);
 
-
-            return project;
+            return savedUserProject;
         }
         else {
             throw new NotFoundError;
