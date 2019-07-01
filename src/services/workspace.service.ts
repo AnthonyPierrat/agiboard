@@ -76,6 +76,6 @@ export class WorkspaceService {
      * @param {number} idUser user id
      */
     async findWorkspacesByUser(idUser: number): Promise<Workspace[]> {
-        return await this.workspaceRepository.find({ relations: ["owner"], where: { owner: { id: idUser } } });
+        return await this.workspaceRepository.find({ relations: ["owner", "projects"], where: { owner: { id: idUser } } });
     }
 }
