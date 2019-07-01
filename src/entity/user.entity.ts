@@ -1,6 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany, UpdateDateColumn, ManyToMany, JoinTable } from "typeorm";
 import { Workspace } from "./workspace.entity";
+<<<<<<< HEAD
 import { UserProject } from "./userProject.entity";
+=======
+>>>>>>> e3868ac1ef683cdc01093160c65bd4ca7222e2c0
 import { Event } from "./event.entity";
 
 @Entity()
@@ -46,4 +49,5 @@ export class User {
 
     @OneToMany(type => UserProject, userProject => userProject.user)
     userProjects: UserProject[];   
+    
 }

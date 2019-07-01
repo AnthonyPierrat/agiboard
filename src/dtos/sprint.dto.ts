@@ -34,6 +34,8 @@ export class SprintUpdateDto {
 
     endDate: Date
 
+    creationDate: Date
+
     lastUpdate: Date
 
     deleted: boolean = false;
