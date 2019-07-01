@@ -74,7 +74,7 @@ export class ProjectService {
      * @param {UserProject} userProject 
      * @returns {Promise<Project>}
      */
-    async addMember(userProject: UserProject): Promise<any> {
+    async addMember(userProject: UserProject): Promise<UserProject> {
         let { project, user } = userProject;
         const projectExist = await this.projectRepository.findOne(project);
         const userExist = await this.userRepository.findOne(user);
