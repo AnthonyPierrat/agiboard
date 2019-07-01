@@ -6,6 +6,8 @@ import { Project } from '../entity/project.entity';
 import { ProjectCreationDto } from '../dtos/project.dto';
 import { User } from '../entity/user.entity';
 import { UserProject } from '../entity/userProject.entity';
+import { Sprint } from "../entity/sprint.entity";
+
 
 @Service()
 export class ProjectService {
@@ -20,7 +22,9 @@ export class ProjectService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         @InjectRepository(UserProject)
-        private readonly userProjectRepository: Repository<UserProject>
+        private readonly userProjectRepository: Repository<UserProject>,
+        @InjectRepository(Sprint)
+        private readonly sprintRepository: Repository<Sprint>,
     ) { }
 
     /**
@@ -29,12 +33,19 @@ export class ProjectService {
      * @returns {Promise<Project>}
      */
     async create(project: ProjectCreationDto): Promise<Project> {
-        let { name, description, workspace, userProjects, budget, creationDate, startDate, endDate, lastUpdate } = project;
-        creationDate = new Date();
-        lastUpdate = new Date();
-        userProjects = [];
+        project.creationDate = new Date();
+        project.lastUpdate = new Date();
+        project.userProjects = [];
 
-        return await this.projectRepository.save({ name, description, workspace, userProjects, budget, creationDate, startDate, endDate, lastUpdate });
+        //save members relation
+        const allSprints =  await this.sprintRepository.find({id: In(project.sprints)});
+
+        project.sprints = [];
+        for(const sprint of allSprints){
+            project.sprints.push(sprint);
+        }
+
+        return await this.projectRepository.save(project);
     }
 
     /**
@@ -42,7 +53,7 @@ export class ProjectService {
      * @returns {Promise<Project[]>}
      */
     async findAll(): Promise<Project[]> {
-        return await this.projectRepository.find({ relations: ["workspace", "userProjects", "userProjects.user"] }); //relations : to get full workspace data
+        return await this.projectRepository.find({ relations: ["workspace", "userProjects", "userProjects.user","sprints"] }); //relations : to get full workspace data
     }
 
     /**
@@ -51,7 +62,7 @@ export class ProjectService {
      * @returns {Promise<Project>}
      */
     async findOne(id: number): Promise<Project> {
-        const result = await this.projectRepository.findOne({ relations: ["workspace", "userProjects", "userProjects.user"] });
+        const result = await this.projectRepository.findOne({ relations: ["workspace", "userProjects", "userProjects.user","sprints"] });
         if (result) {
             return result;
         }
@@ -59,7 +70,7 @@ export class ProjectService {
             throw new NotFoundError;
         }
     }
-
+    
     /**
      * Update a project
      * @param {Project} project project to update
