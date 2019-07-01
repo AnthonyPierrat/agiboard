@@ -4,6 +4,7 @@ import { Repository, In } from 'typeorm';
 import { NotFoundError } from "routing-controllers";
 import { Sprint } from '../entity/sprint.entity';
 import { Event } from '../entity/event.entity';
+import { Project } from '../entity/project.entity';
 
 import { SprintCreationDto, SprintUpdateDto } from '../dtos/sprint.dto';
 
@@ -19,7 +20,10 @@ export class SprintService {
         private readonly sprintRepository: Repository<Sprint>,
 
         @InjectRepository(Event)
-        private readonly eventRepository: Repository<Event>
+        private readonly eventRepository: Repository<Event>,
+
+        @InjectRepository(Project)
+        private readonly projectRepository: Repository<Project>
     ) { }
 
     /**
@@ -30,6 +34,9 @@ export class SprintService {
     async create(sprint: SprintCreationDto): Promise<Sprint> {
         sprint.creationDate = new Date();
         sprint.lastUpdate = new Date();
+
+        const project = await this.projectRepository.findOne(sprint.project);
+        sprint.project = project;
 
         return await this.sprintRepository.save(sprint);
     }

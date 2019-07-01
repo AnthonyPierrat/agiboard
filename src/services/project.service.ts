@@ -6,7 +6,6 @@ import { Project } from '../entity/project.entity';
 import { ProjectCreationDto } from '../dtos/project.dto';
 import { User } from '../entity/user.entity';
 import { UserProject } from '../entity/userProject.entity';
-import { Sprint } from "../entity/sprint.entity";
 
 
 @Service()
@@ -22,9 +21,7 @@ export class ProjectService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         @InjectRepository(UserProject)
-        private readonly userProjectRepository: Repository<UserProject>,
-        @InjectRepository(Sprint)
-        private readonly sprintRepository: Repository<Sprint>,
+        private readonly userProjectRepository: Repository<UserProject>
     ) { }
 
     /**
@@ -36,14 +33,7 @@ export class ProjectService {
         project.creationDate = new Date();
         project.lastUpdate = new Date();
         project.userProjects = [];
-
-        //save members relation
-        const allSprints = await this.sprintRepository.find({ id: In(project.sprints) });
-
         project.sprints = [];
-        for (const sprint of allSprints) {
-            project.sprints.push(sprint);
-        }
 
         return await this.projectRepository.save(project);
     }
