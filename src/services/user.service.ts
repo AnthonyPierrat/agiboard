@@ -32,7 +32,7 @@ export class UserService {
         password = await hash(password, 10);
         creationDate = new Date();
         lastUpdate = new Date();
-        return await this.userRepository.save({ name, email, password, creationDate, lastUpdate });
+        return await this.userRepository.save({ name, email, password, creationDate, lastUpdate, userProjects: [] });
     }
 
     /**
@@ -49,7 +49,7 @@ export class UserService {
      * @returns {Promise<User>}
      */
     async findOne(id: number): Promise<User> {
-        return await this.userRepository.findOne(id);
+        return await this.userRepository.findOne({ relations: ["userProjects"] });
     }
 
     /**
