@@ -55,7 +55,7 @@ export class SprintService {
      * @returns {Promise<Sprint>}
      */
     async findOne(id: number): Promise<Sprint> {
-        const result = await this.sprintRepository.findOne(id, {relations: ["events", "tasks", "project"]});
+        const result = await this.sprintRepository.findOne(id, {relations: ["events", "tasks", "project", "tasks.members"]});
         if (result) {
             return result;
         }
