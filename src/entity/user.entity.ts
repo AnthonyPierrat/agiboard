@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany, UpdateDateColumn, ManyToMany, JoinTable } from "typeorm";
 import { Workspace } from "./workspace.entity";
 import { UserProject } from "./userProject.entity";
+import { Event } from "./event.entity";
 
 @Entity()
 @Unique(["email"])
@@ -39,6 +40,11 @@ export class User {
     @OneToMany(type => Workspace, workspace => workspace.owner)
     workspaces: Workspace[];
 
+    
+    @ManyToMany(type => Event)
+    events: Event[];
+
     @OneToMany(type => UserProject, userProject => userProject.user)
-    userProjects: UserProject[];
+    userProjects: UserProject[];   
+    
 }
