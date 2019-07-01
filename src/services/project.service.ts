@@ -38,10 +38,10 @@ export class ProjectService {
         project.userProjects = [];
 
         //save members relation
-        const allSprints =  await this.sprintRepository.find({id: In(project.sprints)});
+        const allSprints = await this.sprintRepository.find({ id: In(project.sprints) });
 
         project.sprints = [];
-        for(const sprint of allSprints){
+        for (const sprint of allSprints) {
             project.sprints.push(sprint);
         }
 
@@ -53,7 +53,7 @@ export class ProjectService {
      * @returns {Promise<Project[]>}
      */
     async findAll(): Promise<Project[]> {
-        return await this.projectRepository.find({ relations: ["workspace", "userProjects", "userProjects.user","sprints"] }); //relations : to get full workspace data
+        return await this.projectRepository.find({ relations: ["workspace", "userProjects", "userProjects.user", "sprints"] }); //relations : to get full workspace data
     }
 
     /**
@@ -62,7 +62,7 @@ export class ProjectService {
      * @returns {Promise<Project>}
      */
     async findOne(id: number): Promise<Project> {
-        const result = await this.projectRepository.findOne({ relations: ["workspace", "userProjects", "userProjects.user","sprints"] });
+        const result = await this.projectRepository.findOne(id, { relations: ["workspace", "userProjects", "userProjects.user", "sprints"] });
         if (result) {
             return result;
         }
@@ -70,7 +70,7 @@ export class ProjectService {
             throw new NotFoundError;
         }
     }
-    
+
     /**
      * Update a project
      * @param {Project} project project to update
