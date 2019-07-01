@@ -39,7 +39,7 @@ export class SprintService {
      * @returns {Promise<Sprint[]>}
      */
     async findAll(): Promise<Sprint[]> {
-        return await this.sprintRepository.find({relations: ["events", "tasks"]});
+        return await this.sprintRepository.find({relations: ["events", "tasks", "project"]});
     }
 
     /**
@@ -48,7 +48,7 @@ export class SprintService {
      * @returns {Promise<Sprint>}
      */
     async findOne(id: number): Promise<Sprint> {
-        const result = await this.sprintRepository.findOne(id, {relations: ["events", "tasks"]});
+        const result = await this.sprintRepository.findOne(id, {relations: ["events", "tasks", "project"]});
         if (result) {
             return result;
         }

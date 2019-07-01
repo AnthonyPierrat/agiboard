@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, ManyToOne, OneToMany } from "typeorm";
 import { Workspace } from "./workspace.entity";
 import { UserProject } from "./userProject.entity";
+import { Sprint } from "./sprint.entity";
+import { type } from "os";
 
 @Entity()
 
@@ -23,6 +25,9 @@ export class Project {
 
     @OneToMany(type => UserProject, userProject => userProject.project)
     userProjects: UserProject[];
+
+    @OneToMany(type => Sprint, sprint => sprint.project)
+    sprints : Sprint[];
 
     @Column()
     budget: number;

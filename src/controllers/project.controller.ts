@@ -50,7 +50,6 @@ export class WorkspaceController extends ApiController {
         return this.response(true, project, 'project #' + id + ' successfully returned', 200);
     }
 
-
     @Put("/projects/:id")
     private async put(@Param("id") id: number, @Body() project: ProjectUpdateDto) {
         const updatedProject = await this.projectService.save(project);

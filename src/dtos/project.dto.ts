@@ -1,6 +1,7 @@
 import { MaxLength, IsNotEmpty } from "class-validator";
 import { Workspace } from "../entity/workspace.entity";
 import { UserProject } from "../entity/userProject.entity";
+import { Sprint } from "../entity/sprint.entity";
 
 export class ProjectCreationDto {
 
@@ -16,6 +17,8 @@ export class ProjectCreationDto {
     workspace: Workspace;
 
     userProjects: UserProject[];
+
+    sprints: Sprint[];
 
     budget: number;
 
@@ -44,6 +47,8 @@ export class ProjectUpdateDto {
     workspace: Workspace;
 
     userProjects : UserProject[];
+    
+    sprints: Sprint[];
 
     budget: number;
 
