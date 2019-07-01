@@ -43,5 +43,7 @@ export class User {
     
     @ManyToMany(type => Event)
     events: Event[];
-    
+
+    @OneToMany(type => UserProject, userProject => userProject.user)
+    userProjects: UserProject[];   
 }

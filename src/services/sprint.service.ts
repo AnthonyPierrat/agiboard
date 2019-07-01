@@ -63,6 +63,7 @@ export class SprintService {
      * @returns {Promise<Sprint>}
      */
     async save(sprint: SprintUpdateDto): Promise<Sprint> {
+        sprint.lastUpdate = new Date();
         return await this.sprintRepository.save(sprint);
     }
 
