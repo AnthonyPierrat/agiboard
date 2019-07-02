@@ -43,7 +43,7 @@ export class ProjectService {
      * @returns {Promise<Project[]>}
      */
     async findAll(): Promise<Project[]> {
-        return await this.projectRepository.find({ relations: ["workspace", "userProjects", "userProjects.user", "sprints"] }); //relations : to get full workspace data
+        return await this.projectRepository.find({ relations: ["workspace", "userProjects", "userProjects.user", "userProjects.project", "sprints"] }); //relations : to get full workspace data
     }
 
     /**
@@ -52,7 +52,7 @@ export class ProjectService {
      * @returns {Promise<Project>}
      */
     async findOne(id: number): Promise<Project> {
-        const result = await this.projectRepository.findOne(id, { relations: ["workspace", "userProjects", "userProjects.user", "sprints"] });
+        const result = await this.projectRepository.findOne(id, { relations: ["workspace", "userProjects", "userProjects.user", "userProjects.project", "sprints"] });
         if (result) {
             return result;
         }
@@ -88,6 +88,15 @@ export class ProjectService {
         }
         else {
             throw new NotFoundError;
+        }
+    }
+
+    async getMembers(id: number) {
+        const result = await this.projectRepository.findOne(id, { relations: ["userProjects", "userProjects.user", "userProjects.project"] });
+        if (!result) {
+            throw new NotFoundError;
+        } else {
+            return result.userProjects;
         }
     }
 
