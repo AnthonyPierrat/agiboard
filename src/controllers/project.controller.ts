@@ -62,6 +62,12 @@ export class WorkspaceController extends ApiController {
         return this.response(true, addMember, "is added to project " + id, 200);
     }
 
+    @Get("/projects/:id/members")
+    private async getMembers(@Param("id") id: number) {
+        const members = await this.projectService.getMembers(id);
+        return this.response(true, members, "members successfully returned" + id, 200);
+    }
+
     @Delete("/projects/:id")
     private async remove(@Param("id") id: number) {
         const projectToDelete = await this.projectService.findOne(id);
