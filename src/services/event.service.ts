@@ -35,13 +35,14 @@ export class EventService {
     async create(event: EventCreationDto): Promise<Event> {
         //handle relation with members
         let { members } = event;
-        const users =  await this.userRepository.find({id: In(members)});
+        if(members!=null){
+            const users =  await this.userRepository.find({id: In(members)});
 
-        event.members = [];
-        for(const member of users){
-            event.members.push(member);
-        }
-
+            event.members = [];
+            for(const member of users){
+                event.members.push(member);
+            }
+        }  
         //handle relation with sprint    
         event.sprint = await this.sprintRepository.findOne(
             {id: (Number)(event.sprint)});
