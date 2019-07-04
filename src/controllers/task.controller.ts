@@ -51,7 +51,7 @@ export class TaskController extends ApiController {
 
     @Put("/tasks/:id")
     async put(@Param("id") id: number, @Body() user: any) {
-        const taskModified = await this.taskService.save(user);
+        const taskModified = await this.taskService.update(user);
         return this.response(true, taskModified, 'Task successfully modified', 200);
     }
 
