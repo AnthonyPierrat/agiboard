@@ -34,12 +34,14 @@ export class TaskService {
 
         //save members relation
         let { members } = task;
-        if(members != null){
+        if(members){
             const users =  await this.userRepository.find({id: In(members)});
             task.members = [];
             for(const member of users){
                 task.members.push(member);
             }
+        } else{
+            task.members = null;
         }
 
         task.creationDate = new Date();
