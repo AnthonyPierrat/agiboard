@@ -72,6 +72,25 @@ export class TaskService {
             throw new NotFoundError;
         }
     }
+    
+    async update(task: Task): Promise<Task> {
+        //save members relation
+        let { members } = task;
+        if(members){
+            const users =  await this.userRepository.find({id: In(members)});
+            task.members = [];
+            for(const member of users){
+                task.members.push(member);
+            }
+        } else{
+            task.members = null;
+        }
+
+        task.lastUpdate = new Date();
+
+        return await this.taskRepository.save(task);
+    }
+
 
     /**
      * Update a task
